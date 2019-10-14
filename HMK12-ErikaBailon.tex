@@ -1,0 +1,296 @@
+\documentclass[12pt]{article}
+\renewcommand{\baselinestretch}{1.2}
+\usepackage{fancyhdr}
+\usepackage[shortlabels]{enumitem}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{color,graphicx,hyperref}
+\setlength{\textwidth}{7.5in}
+\setlength{\parskip}{1em}
+%\setlist{leftmargin=0.5cm,itemsep=0em}
+\pagestyle{fancy} \hoffset=-1in \voffset=-0.75in \textheight=9in
+\headsep = 2em \headheight = 30pt
+\definecolor{grey}{RGB}{96,96,96}
+\definecolor{green}{RGB}{0,64,0}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\begin{document}
+\lhead{{\bf CSCI 3403 \\ Professor Daniel Massey}}
+\rhead{{\bf Erika Bailon \\ Homework 12}}
+\renewcommand{\headrulewidth}{0.4pt}
+\vspace{-3mm}
+\hspace{-2em}
+{\Large \textbf{Stallings and Brown Chapter 9 Review Questions:}} \par \vspace{-0.5em}
+\begin{description}
+     % REVIEW 9.11
+    \item[Review Question 9.11:]{\color{grey}What is a DMZ network and what types of systems would you expect to find on such networks?}  
+    
+    DMZ is a computer network or a host that is in between the external and internal firewall. It prevents the direct access from external users to server. The types of systems are Corporate Websites, Email Servers, and Domain Name System Servers.
+    
+    (Page 301)
+    
+    % REVIEW 9.13
+    \item[Review Question 9.13:]{\color{grey}How does an ISP differ from a firewall?}  
+    
+    IPS is capable of detecting or blocking the traffic by discarding the packet. It also monitors the ports and sends commands to firewall to stop the traffic. It also adds IDS to block the traffic. 
+    
+\end{description}
+\hspace{-2em}
+{\Large \textbf{Stallings and Brown Chapter 9 Problems:}} \par \vspace{-0.5em}
+\begin{description}
+    % PROBLEM 9.1
+    \item[Problem 9.1:]{\color{grey}As was mentioned in Section 9.3, one approach to defeating the tiny fragment attack is to enforce a minimum length of the transport header that must be contained in the first fragment of an IP packet.  If the first fragment is rejected, all subsequent fragments can be rejected.  However, the nature of IP is such that fragments may arrive out of order.  Thus, an intermediate fragment may pass through the filter before the initial fragment is rejected.  How can this situation be handled?}\par
+    \tab  It can be handled by a reassembly algorithm that will help detect the fragments that have overlap portions and will overwrite them, creating a new fragments that will be in order. The lowest fragment will contain safe data to allow the packet to pass the filter and this will have a packet following with a non-zero offset that will overlap header information and it will be modified. The the subsequent will pass the filters because it doesn't have a non-zero offset. 
+    
+    % PROBLEM 9.5
+    \item[Problem 9.5:]{\color{grey}SMTP (Simple Mail Transfer Protocol) is the standard protocol for transferring mail between hosts over TCP.  A TCP connection is set up between a user agent and a server program.  The server listens on TCP port 25 for incoming connection requests.  The user end of the connection is on a TCP port number above 1023.  Suppose you wish to build a packet filter rule set allowing inbound and outbound SMTP traffic.  You generate the following rule set:}
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+      \hline
+        \textbf{Rule} & \textbf{Direction} & \textbf{Scr Addr} & \textbf{Dest Addr} & \textbf{Protocol} & \textbf{Dest Port} & \textbf{Action} \\
+        \hline
+        A & In & External & Internal & TCP & 25 & Permit \\
+        \hline
+        B & Out & Internal & External & TCP & $>1023$ & Permit \\
+        \hline
+        C & Out & Internal & External & TCP & 25 & Permit \\
+        \hline
+        D & In & External & Internal & TCP & $>1023$ & Permit \\
+        \hline
+        E & Either & Any & Any & Any & Any & Deny \\
+        \hline
+      \end{tabular}
+    \end{center} \par
+    \begin{enumerate}[a.]
+        % PROBLEM 9.5.A
+        \item {\color{grey}Describe the effect of each rule.}  
+        
+        -Rule A permits the inbound SMTP connection since is defining the remote host receiving the incoming email from external server.\\
+        -Rule B permits the inbound SMTP connection since is defining the external server receiving the incoming email from remote host. \\
+        -Rule C permits the outbound SMTP connection since it defines the external server transmitting the outgoing email to remote host. \\
+        -Rule D permits the outbound SMTP connection since it defines the remote host transmitting the outgoing email to external server. \\
+        -Rule E is a default rule that is only applied when the other rules do not apply, it defines the direction as "in" or "out" and the action is to deny.  
+
+        
+        % PROBLEM 9.5.B
+        \item {\color{grey}Your host in this example has IP address 172.16.1.1.  Someone tries to send e-mail from a remote host with IP address 192.168.3.4.  If successful, this generates an SMTP dialogue between the remote user and the SMTP server on your host consisting of SMTP commands and mail.  Additionally, assume a user on your host tries to send e-mail to the SMTP server on the remote system.  Four typical packets from this scenario are as shown:}\par
+        \begin{center}
+          \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Packet} & \textbf{Direction} & \textbf{Src Addr} & \textbf{Dest Addr} & \textbf{Protocol} & \textbf{Dest Port} & \textbf{Action} \\
+            \hline
+            1 & In & 192.168.3.4 & 172.16.1.1 & TCP & 25 & ? \\
+            \hline
+            2 & Out & 172.16.1.1 & 192.168.3.4 & TCP & 1234 & ? \\
+            \hline
+            3 & Out & 172.16.1.1 & 192.168.3.4 & TCP & 25 & ? \\
+            \hline
+            4 & In & 192.168.3.4 & 172.16.1.1 & TCP & 1357 & ? \\
+            \hline
+          \end{tabular}
+        \end{center} \par
+         \vspace{10pt} 
+        {\color{grey}Indicate which packets are permitted or denied and which rule is used in each case.} \par
+    \vspace{10pt} 
+          \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Packet} & \textbf{Direction} & \textbf{Src Addr} & \textbf{Dest Addr} & \textbf{Protocol} & \textbf{Dest Port} & \textbf{Action} \\
+            \hline
+            1 & In & 192.168.3.4 & 172.16.1.1 & TCP & 25 & Permit (A) \\
+            \hline
+            2 & Out & 172.16.1.1 & 192.168.3.4 & TCP & 1234 & Permit (B) \\
+            \hline
+            3 & Out & 172.16.1.1 & 192.168.3.4 & TCP & 25 & Permit (C) \\
+            \hline
+            4 & In & 192.168.3.4 & 172.16.1.1 & TCP & 1357 & Permit (D) \\
+            \hline
+          \end{tabular}
+     
+        \vspace{20pt} 
+        
+        % PROBLEM 9.5.C
+        \item {\color{grey} Someone from the outside world (10.1.2.3) attempts to open a connection from port 5150 on a remote host to the Web proxy server on port 8080 on one of your local hosts (172.16.3.4) in order to carry out an attack.  Typical packets are as follows:} \par
+        \begin{center}
+          \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Packet} & \textbf{Direction} & \textbf{Src Addr} & \textbf{Dest Addr} & \textbf{Protocol} & \textbf{Dest Port} & \textbf{Action} \\
+            \hline
+            5 & In & 10.1.2.3 & 172.16.3.4 & TCP & 8080 & ? \\
+            \hline
+            6 & Out & 172.16.3.4 & 10.1.2.3 & TCP & 5150 & ? \\
+            \hline
+          \end{tabular}
+        \end{center} \par
+        
+        {\color{grey}Will the attack succeed?  Give details.}\par
+        \tab  The attack would succeed because in the original filter set, rules B and D permits all connections that ends with transmission ports above 1023.
+        \begin{center}
+          \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            \textbf{Packet} & \textbf{Direction} & \textbf{Src Addr} & \textbf{Dest Addr} & \textbf{Protocol} & \textbf{Dest Port} & \textbf{Action} \\
+            \hline
+            5 & In & 10.1.2.3 & 172.16.3.4 & TCP & 8080 & Permit (B)\\
+            \hline
+            6 & Out & 172.16.3.4 & 10.1.2.3 & TCP & 5150 & Permit (D) \\
+            \hline
+          \end{tabular}
+        \end{center} \par
+        
+        
+    \end{enumerate}
+    
+    % PROBLEM 9.6
+    \item[Problem 9.6:]{\color{grey} To provide more protection, the rule set from the preceding problem is modified as follows:}\par
+    \begin{center}
+      \begin{tabular}{|c|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Rule} & \textbf{Direction} & \textbf{Src Addr} & \textbf{Dest Addr} & \textbf{Protocol} & \textbf{Src Port} & \textbf{Dest Port} & \textbf{Action} \\
+        \hline
+        A & In & External & Internal & TCP & $>1023$ & 25 & Permit \\
+        \hline
+        B & Out & Internal & External & TCP & 25 & $>1023$ & Permit \\
+        \hline
+        C & Out & Internal & External & TCP & $>1023$ & 25 & Permit \\
+        \hline
+        D & In & External & Internal & TCP & 25 & $>1023$ & Permit \\
+        \hline
+        E & Either & Any & Any & Any & Any & Any & Deny \\
+        \hline
+      \end{tabular}
+    \end{center} \par
+    \begin{enumerate}[a.]
+        
+        % PROBLEM 9.6.A
+        \item {\color{grey}Describe the change.} 
+        
+        The only difference is that now a bound is being added with the Src Port and the Dest Port. So it would be as follows:\\
+         -Rule A permits the inbound SMTP connection since is defining the remote host receiving the incoming email from external server from Src Port greater than 1023 to Dest Port of 25.\\
+        -Rule B permits the inbound SMTP connection since is defining the external server receiving the incoming email from remote host, from Src Port of 25 to Dest Port greater than 1023. \\
+        -Rule C permits the outbound SMTP connection since it defines the external server transmitting the outgoing email to remote host, from Src Port greater than 1023 to Dest Port of 25. \\
+        -Rule D permits the outbound SMTP connection since it defines the remote host transmitting the outgoing email to external server, from Src Port of 25 to Dest Port greater than 1023. \\
+        -Rule E is a default rule that is only applied when the other rules do not apply, it defines the direction as "in" or "out" and the action is to deny. 
+        
+        
+        % PROBLEM 9.6.B
+        \item {\color{grey}Apply this new rule set to the same six packets of the preceding problem.  Indicate which packets are permitted or denied and which rule is used in each case.}\par
+        
+        Packet 1 :: Permit (A)\\
+        Packet 2 :: Permit (B)\\
+        Packet 3 :: Permit (C)\\
+        Packet 4 :: Permit (D)\\
+        Packet 5 :: Deny (E)\\
+        Packet 6 :: Deny (E)\\
+        
+        
+    \end{enumerate}
+    
+    
+    % PROBLEM 9.11
+    \item[Problem 9.11:]{\color{grey}You are given the following ``informal firewall policy" details to be implemented using a firewall such as that in Figure 9.2:
+    \begin{enumerate}[1.]
+        \item E-mail may be sent using SMTP in both directions through the firewall, but it must be relayed via the DMZ mail gateway that provides header sanitization and content filtering.  External e-mail must be destined for the DMZ mail server.
+        \item Users inside may retrieve their e-mail from the DMZ mail gateway, using either POP3 or or POP3S, and authenticate themselves.
+        \item Users outside may retrieve their e-mail from the DMZ mail gateway, but only if they use the secure POP3 protocol and authenticate themselves.
+        \item Web requests (both both insecure and secure) are allowed from any internal user out through the firewall but must be relayed via the DMZ Web proxy, which provides content filtering (noting this is not possible for secure requests), and users must authenticate with the proxy for logging.
+        \item Web request (both insecure and secure) are allowed from anywhere on the Internet to the DMZ Web server.
+        \item DNS lookup requests by internal users are allowed via the DMZ DNS server, which queries to the internet.
+        \item External DNS requests are provided by the DMZ DNS server.
+        \item Management and update of information on the DMZ servers is allowed using secure shell connections from relevant authorized internal users (may have different sets of users on each system as appropriate).
+        \item SNMP management requests are permitted from the internal management hosts to the firewalls, with the firewalls also allowed to send management traps (i.e., notification of some event occurring) to the management hosts.
+    \end{enumerate}
+    Design suitable packet filter rule sets (similar to those shown in Table 9.1) to be implemented on the ``External Firewall" and the ``Internal Firewall" to satisfy the aforementioned policy requirements.}\par
+    Next page ...\\
+    
+    \vspace{180pt}
+    
+    Not Est = Not Established 
+    
+    :::::EXTERNAL::::
+    \begin{center}
+    \fontsize{8}{12}\selectfont
+      \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Action} & \textbf{Source} & \textbf{Port} & \textbf{Destination} & \textbf{Port} & \textbf{Flags} & \textbf{Comments} \\
+        \hline
+        Permit & DMZ mail gateway & Any & Any & SMTP (25) & Not Est & Sanitizing the header \\
+        Permit & Any & Any & DMZ mail gateway & SMTP (25) & Not Est & Filtering the Content \\
+        Permit & Any & Any & DMZ mail gateway & POP3S (995) & Not Est &User Authentication\\
+        Permit & DMZ web Proxy & Any & Any & HTTP/S(80/443) & Not Est & Content Filtered, User Authentication\\
+        Permit & DMZ DNS Server & DNS (53) & Any & DNS(53) & Not Est & TCP and UDP \\
+        Permit & Any & DNS (53) & DMZ DNS Server & DNS(53) & Not Est & TCP and UDP \\
+        Permit & Any & Any DMZ  & Any & Any & Est & Return Traffic Flow \\
+        Permit & Any & Any & Any & Any & Not Est & Block All Else \\
+        \hline
+      \end{tabular}
+    \end{center} \par
+    
+    
+        :::::INTERNAL::::
+    \begin{center}
+    \fontsize{8}{12}\selectfont
+      \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Action} & \textbf{Source} & \textbf{Port} & \textbf{Destination} & \textbf{Port} & \textbf{Flags} & \textbf{Comments} \\
+        \hline
+        Permit & Any Int & Any & DMZ mail gateway & SMTP (25) & Not Est & Sanitizing the header \\
+        Permit & Any Int& Any & DMZ mail gateway & POP3/S(110,995)  & Not Est & Content Filtered \\
+        Permit & Any Int& Any & DMZ Web Proxy & HTTP/S(80,443) & Not Est & User Authentication\\
+        Permit & Any Int& DNS (53) & DMZ DNS Server & DNS (53) & Not Est & Content Filtered, User Authentication \\
+        Permit & DMZ DNS server & DNS (53) & Any Internal & DNS (53) & Not Est &  TCP and UDP\\
+        Permit & Any & Any & Any DMZ server & SSH (22) & Not Est &  TCP and UDP \\
+        Permit & Management User Host & Any & Any DMZ server & SNMP (161) & Not Est & Return Traffic Flow \\
+        Permit & Permit & Any & Management User Host & SNMP TRAP (162) & Not Est & Block All Else\\
+        \hline
+      \end{tabular}
+    \end{center} \par
+    
+\end{description}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
